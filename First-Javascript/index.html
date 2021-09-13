@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US">
+
+<head>
+
+<title>HTML/JavaScript Assessment</title>
+<meta charset="UTF-8">
+<meta name="author" content="James Howell">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  header {background-color: hsl(180, 100%, 98%);}
+  h1 {
+    text-align:center;
+    margin:auto;
+    width: 600px;
+    color:rgb(0, 0, 139);
+    background-color: rgb(173, 216, 230);
+    font-family:verdana;
+  }
+    p {font-family:verdana;}
+    body {background-color: hsl(180, 100%, 98%);}
+
+    a:link {text-decoration: none;}
+    a:visited {text-decoration: none;}
+    a:hover {text-decoration: underline;}
+    a:active {text-decoration: underline;}
+
+</style>
+
+</head>
+
+<header>
+<h1>HTML/JavaScript Assessment</h1>
+</header>
+
+<body>
+
+<p id="input1">Input Information</p>
+
+<div>
+<form>
+  <label for="uid">User ID:</label><br>
+  <input type="text" id="uid" name="uid">
+  <b id="uiderror" style="color:red;"></b><br>
+  <label for="fname">First Name:</label><br>
+  <input type="text" id="fname" name="fname">
+  <b id="fnameerror" style="color:red;"></b><br>
+  <label for="lname">Last Name:</label><br>
+  <input type="text" id="lname" name="lname">
+  <b id="lnameerror" style="color:red;"></b><br>
+  <label for="birthday">Birthday:</label><br>
+  <input type="date" id="birthday" name="birthday">
+  <b id="birthdayerror" style="color:red;"></b><br><br>
+  <button type="button" onclick="submitInfo(this.form)">Submit</button>
+</form>
+<br>
+<p id="message1"></p>
+<p id="message2"></p>
+</div>
+
+<script>
+//Define Variables
+var fname, lname, uid, birthday;
+var xLines = 20
+var xNumber = 1
+console.log('variables created');
+console.log('fname='+fname);
+console.log('lname='+lname);
+console.log('uid='+uid);
+console.log('birthday='+birthday);
+console.log('xLines='+xLines);
+console.log('xNumber='+xNumber);
+
+//For Loop to create lines of Xs
+for (let i = 0; i < xLines; i++) {
+    document.write(xLoop(xNumber));
+    xNumber += 1
+}
+
+//Submit button behavior
+function submitInfo(form) {
+    console.log('info submitted');
+    var uid = form.uid.value; console.log('uid='+uid)
+    var fname = form.fname.value; console.log('fname='+fname)
+    var lname = form.lname.value; console.log('lname='+lname)
+    var birthday = form.birthday.value; console.log('birthday='+birthday)
+    
+    //UID verification pass/fail
+    if (verifyUID(uid)) {
+        document.getElementById("uiderror").innerHTML = "";
+        console.log('uid is good');
+    } else {
+        document.getElementById("uiderror").innerHTML = "Invalid UserID";
+        console.log('uid is bad');}
+
+    //First Name verification pass/fail
+    if (verifyFirstName(fname)) {
+        document.getElementById("fnameerror").innerHTML = "";
+        console.log('fname is good');
+    } else {
+        document.getElementById("fnameerror").innerHTML = "Invalid First Name";
+        console.log('fname is bad');}
+    //Last Name verification pass/fail
+    if (verifyLastName(lname)) {
+        document.getElementById("lnameerror").innerHTML = "";
+        console.log('lname is good');
+    } else {
+        document.getElementById("lnameerror").innerHTML = "Invalid Last Name";
+        console.log('lname is bad');}
+    //Birthday verification pass/fail
+    if (birthday != undefined && birthday != "") {
+        console.log('birthdate valid')
+        document.getElementById("birthdayerror").innerHTML = "";
+            //Birthday message control
+            if (dateDiff(birthday) >= 0) {
+                if (dateDiff(birthday) > 18*365) {
+                    document.getElementById("message1").innerHTML = fname + " " + lname + ", you have been breathing for " + dateDiff(birthday) + " days!";
+                }  else {
+                    document.getElementById("message1").innerHTML = "You are probably not old enough to take this class!";}
+            } else {
+                document.getElementById("message1").innerHTML = "You must be some kind of time traveler?";}
+    } else {
+        document.getElementById("birthdayerror").innerHTML = "Invalid Birthday";
+        document.getElementById("message1").innerHTML = "";
+        console.log('birthdate invalid');}
+
+}
+
+//Function to verify UID elements
+function verifyUID(uid) {
+    //The UserID must contain an uppercase, a lowercase, a number, and be 8 to 12 chars long. 
+    var uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+    var lowercase = "abcdefghijklmnopqrstuvwxyz";
+    var digits = "0123456789";
+    var splChars ="!@#$%&*()"; 
+    var ucaseFlag = contains(uid, uppercase); 
+    var lcaseFlag = contains(uid, lowercase); 
+    var digitsFlag = contains(uid, digits); 
+    if(uid.length>=8 && uid.length<=12 && ucaseFlag && lcaseFlag && digitsFlag) {
+        return true;
+    } else {
+        return false;
+    }
+  }
+
+function contains(uid, allowedChars) {
+    for (i = 0; i < uid.length; i++) {
+            var char = uid.charAt(i);
+             if (allowedChars.indexOf(char) >= 0) { return true; }
+         } 
+     return false;
+}
+
+//Function to verify First Name
+function verifyFirstName(fname) {
+    if(fname.length!=0 && fname!=undefined) {
+        return true;
+    } else {
+        return false
+    }
+}
+
+//Function to verify Last Name
+function verifyLastName(lname) {
+    if(lname.length!=0 && lname!=undefined) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//Function to calculate difference between current/birth date in days
+function dateDiff(birthday) {
+    let msBirthday = Date.parse(birthday);
+    console.log('msBirthday='+msBirthday);
+    let currentDate = new Date();
+    console.log('currentDate='+currentDate.getTime());
+    let diffDays = Math.floor((currentDate.getTime() - msBirthday) / 8.64e+7)
+    console.log('diffDays='+diffDays)
+    return diffDays
+}
+
+//Function to iterate lines of Xs
+function xLoop(xNumber) {
+	var outputX = "<p>";
+  for (let i = 0; i < xNumber; i++) {
+    outputX += "X";
+    }
+    outputX += "</p>";
+    return outputX;
+}
+
+</script>
+
+</body>
+</html>
